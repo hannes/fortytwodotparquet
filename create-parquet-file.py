@@ -15,11 +15,11 @@ sys.path.append('gen-py')
 from parquet.ttypes import *
 
 schema = [
-	SchemaElement(name = "root", num_children = 1, repetition_type = FieldRepetitionType.REQUIRED), 
+	SchemaElement(name = "r", num_children = 1, repetition_type = FieldRepetitionType.REQUIRED), 
 	SchemaElement(type = Type.INT64, name = "b", num_children = 0, repetition_type = FieldRepetitionType.REQUIRED)
 ]
 
-out = open('evil.parquet', 'wb')
+out = open('42.parquet', 'wb')
 out.write('PAR1'.encode())
 
 col_start = out.tell()
@@ -61,12 +61,10 @@ column.validate()
 
 row_group = RowGroup(num_rows = page_values, total_byte_size = column_bytes, columns = [column])
 
-print(len(thrift_to_bytes(row_group)))
-
 row_group.validate()
 
 # no reason we can't read the same row group n times
-row_group_repeat = 10
+row_group_repeat = 1023
 
 file_meta_data = FileMetaData(version = 1, num_rows = row_group_repeat * page_values, schema=schema, row_groups = [row_group] * row_group_repeat)
 file_meta_data.validate()
