@@ -64,7 +64,7 @@ row_group = RowGroup(num_rows = page_values, total_byte_size = column_bytes, col
 row_group.validate()
 
 # no reason we can't read the same row group n times
-row_group_repeat = 1040
+row_group_repeat = 1050
 
 file_meta_data = FileMetaData(version = 1, num_rows = row_group_repeat * page_values, schema=schema, row_groups = [row_group] * row_group_repeat)
 file_meta_data.validate()
