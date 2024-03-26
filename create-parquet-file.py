@@ -43,7 +43,6 @@ data_offset = out.tell()
 page_repeat = 1000
 row_group_repeat = 290
 page_values = 2_147_483_647 # max int, we can't fit more in a page
-num_values = page_values * page_repeat * row_group_repeat
 
 data_page_content = bytearray([1]) + leb128.u.encode(page_values << 1) + bytearray([0])
 
@@ -61,10 +60,12 @@ for i in range(page_repeat):
 
 column_bytes = out.tell() - col_start
 
-meta_data = ColumnMetaData(type = Type.INT64, encodings = [Encoding.RLE_DICTIONARY], path_in_schema=["b"], codec = CompressionCodec.UNCOMPRESSED, num_values = num_values, total_uncompressed_size = column_bytes, total_compressed_size = column_bytes, data_page_offset = data_offset, dictionary_page_offset = dictionary_offset)
+meta_data = ColumnMetaData(type = Type.INT64, encodings = [Encoding.RLE_DICTIONARY], path_in_schema=["b"], codec = CompressionCodec.UNCOMPRESSED, num_values = page_values * page_repeat, total_uncompressed_size = column_bytes, total_compressed_size = column_bytes, data_page_offset = data_offset, dictionary_page_offset = dictionary_offset)
 meta_data.validate()
 column = ColumnChunk(file_offset = data_offset, meta_data = meta_data)
 column.validate()
+
+num_values = page_values * page_repeat * row_group_repeat
 
 row_group = RowGroup(num_rows = num_values, total_byte_size = column_bytes, columns = [column])
 
