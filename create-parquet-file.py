@@ -41,7 +41,7 @@ data_offset = out.tell()
 
 # and now we refer to this single entry a gazillion times
 page_repeat = 1000
-row_group_repeat = 280
+row_group_repeat = 290
 page_values = 2_147_483_647 # max int, we can't fit more in a page
 num_values = page_values * page_repeat * row_group_repeat
 
