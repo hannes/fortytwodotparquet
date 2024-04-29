@@ -65,9 +65,10 @@ meta_data.validate()
 column = ColumnChunk(file_offset = data_offset, meta_data = meta_data)
 column.validate()
 
-num_values = page_values * page_repeat * row_group_repeat
+num_values_per_rowgroup = page_values * page_repeat
+num_values = num_values_per_rowgroup * row_group_repeat
 
-row_group = RowGroup(num_rows = num_values, total_byte_size = column_bytes, columns = [column])
+row_group = RowGroup(num_rows = num_values_per_rowgroup, total_byte_size = column_bytes, columns = [column])
 
 row_group.validate()
 
